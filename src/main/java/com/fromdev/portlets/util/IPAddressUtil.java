@@ -12,33 +12,33 @@ import javax.servlet.http.HttpServletRequest;
 import com.liferay.portal.util.PortalUtil;
 
 public class IPAddressUtil {
-	public static final String DEFAULT_BROWSER_IP_HEADER_NAMES[] = {
+	public static final String DEFAULT_HEADER_NAMES[] = {
 			"x-forwarded-for", "X-Forwarded-For", "Proxy-Client-IP",
 			"HTTP_CLIENT_IP", "HTTP_X_FORWARDED_FOR" };
 
-	public static String extractBrowserIp(HttpServletRequest request) throws UnknownHostException {
+	public static String extractHttpUserIp(HttpServletRequest request) throws UnknownHostException {
 		if (request == null) {
 			return "";
 		}
-		return extractBrowserIp(request, DEFAULT_BROWSER_IP_HEADER_NAMES);
+		return extractHttpUserIp(request, DEFAULT_HEADER_NAMES);
 	}
-	public static String extractBrowserIp(PortletRequest pReq) throws UnknownHostException {
+	public static String extractHttpUserIp(PortletRequest pReq) throws UnknownHostException {
 		if (pReq == null) {
 			return "";
 		}
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(pReq);
-		return extractBrowserIp(request, DEFAULT_BROWSER_IP_HEADER_NAMES);
+		return extractHttpUserIp(request, DEFAULT_HEADER_NAMES);
 	}
-	public static String extractBrowserIp(PortletRequest pReq,
+	public static String extractHttpUserIp(PortletRequest pReq,
 			String headerNames[]) throws UnknownHostException {
 		if (pReq == null) {
 			return "";
 		}
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(pReq);
-		return extractBrowserIp(request, headerNames);
+		return extractHttpUserIp(request, headerNames);
 	}
 
-	public static String extractBrowserIp(HttpServletRequest request,
+	public static String extractHttpUserIp(HttpServletRequest request,
 			String headerNames[]) throws UnknownHostException {
 		if (request == null) {
 			return "";
@@ -46,7 +46,7 @@ public class IPAddressUtil {
 
 
 		if (headerNames == null || headerNames.length == 0)
-			headerNames = DEFAULT_BROWSER_IP_HEADER_NAMES;
+			headerNames = DEFAULT_HEADER_NAMES;
 		String extractedIp = null;
 		String as[];
 		int j = (as = headerNames).length;
@@ -56,7 +56,7 @@ public class IPAddressUtil {
 //			System.out.println(headerName + " " + headerValue);
 			if (headerValue == null)
 				continue;
-			extractedIp = getIpFromList(headerValue.split(","));
+			extractedIp = getOneGoodIp(headerValue.split(","));
 //			System.out.println("extractedIp " + extractedIp);
 			if (extractedIp != null)
 				break;
@@ -64,7 +64,7 @@ public class IPAddressUtil {
 		return extractedIp == null ? request.getRemoteAddr() : extractedIp;
 	}
 
-	public static Map extractHttpHeaders(PortletRequest pReq) {
+	public static Map convertToMap(PortletRequest pReq) {
 		HttpServletRequest request = PortalUtil.getHttpServletRequest(pReq);
 		Map result = new HashMap();
 		Enumeration headerNames = request.getHeaderNames();
@@ -77,7 +77,7 @@ public class IPAddressUtil {
 		return result;
 	}
 
-	private static String getIpFromList(String ipAddressList[])
+	private static String getOneGoodIp(String ipAddressList[])
 			throws UnknownHostException {
 
 		for (int i = 0; i < ipAddressList.length; i++) {

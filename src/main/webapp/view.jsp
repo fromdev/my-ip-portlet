@@ -18,5 +18,7 @@
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
 <portlet:defineObjects />
-Your IP Address is:  <div class="ip"><%=com.fromdev.portlets.util.IPAddressUtil.extractBrowserIp(renderRequest)%></div>
+
+Your IP Address is:  <div class="ip"><%=com.fromdev.portlets.util.IPAddressUtil.extractHttpUserIp(renderRequest)%></div>
 <br/>
+<%@ include file="footer.jsp"%>
