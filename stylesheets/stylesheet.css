@@ -427,5 +427,15 @@ Small Device Styles
     max-width: 480px;
     font-size: 11px;
   }
+  
+  #navbar {
+  	margin:10 10 10 10;
+  	border:solid 2px red;
+  }
+  
+  #navitem {
+  	border:solid green;
+  	background:grey;
+  }
 
 }
