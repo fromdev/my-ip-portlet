@@ -99,7 +99,7 @@ public class IPAddressUtil {
 			return address.getHostAddress();
 		}
 
-		return "";
+		return null;
 	}
 
 }
